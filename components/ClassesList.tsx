@@ -37,7 +37,8 @@ export default function ClassesList({ userId: serverUserId }: ClassesListProps) 
     } else if (serverUserId && !userId) {
       setUserId(serverUserId)
     }
-  }, [serverUserId, supabase, userId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serverUserId, supabase])
 
   const fetchClasses = useCallback(async (id: string) => {
     try {
