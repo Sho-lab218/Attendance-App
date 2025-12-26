@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import Link from 'next/link'
 import AddClassModal from './AddClassModal'
@@ -37,9 +37,9 @@ export default function ClassesList({ userId: serverUserId }: ClassesListProps) 
     } else if (serverUserId && !userId) {
       setUserId(serverUserId)
     }
-  }, [serverUserId, supabase])
+  }, [serverUserId, supabase, userId])
 
-  const fetchClasses = async (id: string) => {
+  const fetchClasses = useCallback(async (id: string) => {
     try {
       setError(null)
       const { data, error } = await supabase
@@ -56,7 +56,7 @@ export default function ClassesList({ userId: serverUserId }: ClassesListProps) 
     } finally {
       setLoading(false)
     }
-  }
+  }, [supabase])
 
   const handleDeleteClass = async (classId: string, className: string) => {
     if (!confirm(`Are you sure you want to delete "${className}"? This will also delete all sessions and attendance records for this class.`)) {
@@ -87,7 +87,7 @@ export default function ClassesList({ userId: serverUserId }: ClassesListProps) 
       setLoading(true)
       fetchClasses(userId)
     }
-  }, [userId])
+  }, [userId, fetchClasses])
 
   const handleClassAdded = () => {
     if (userId) {

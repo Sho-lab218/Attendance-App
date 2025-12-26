@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -96,7 +96,7 @@ export default function AttendancePage({
     fetchPageData()
   }, [classId, sessionId, classData, sessionData, supabase, router])
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setError(null)
       // Fetch students for this class
@@ -129,13 +129,13 @@ export default function AttendancePage({
     } finally {
       setLoading(false)
     }
-  }
+  }, [classId, sessionId, supabase])
 
   useEffect(() => {
     if (classData && sessionData) {
       fetchData()
     }
-  }, [classId, sessionId, classData, sessionData])
+  }, [classData, sessionData, fetchData])
 
   const handleAttendanceChange = async (studentId: string, status: 'present' | 'absent') => {
     try {

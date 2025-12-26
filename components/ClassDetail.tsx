@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import Link from 'next/link'
@@ -100,7 +100,7 @@ export default function ClassDetail({ classId, classData: serverClassData, userI
     fetchData()
   }, [classId, classData, userId, supabase, router])
 
-  const fetchSessions = async () => {
+  const fetchSessions = useCallback(async () => {
     try {
       setError(null)
       const { data, error } = await supabase
@@ -115,9 +115,9 @@ export default function ClassDetail({ classId, classData: serverClassData, userI
       console.error('Error fetching sessions:', error.message)
       setError('Failed to load sessions. Please try again.')
     }
-  }
+  }, [classId, supabase])
 
-  const fetchStudents = async () => {
+  const fetchStudents = useCallback(async () => {
     try {
       setError(null)
       const { data, error } = await supabase
@@ -134,7 +134,7 @@ export default function ClassDetail({ classId, classData: serverClassData, userI
     } finally {
       setLoading(false)
     }
-  }
+  }, [classId, supabase])
 
   const handleDeleteSession = async (sessionId: string, sessionDate: string) => {
     if (!confirm(`Are you sure you want to delete the session on ${formatDate(sessionDate)}? This will also delete all attendance records for this session.`)) {
@@ -185,7 +185,7 @@ export default function ClassDetail({ classId, classData: serverClassData, userI
       // If no classData yet, keep loading
       setLoading(true)
     }
-  }, [classId, classData])
+  }, [classId, classData, fetchSessions, fetchStudents])
 
   const handleSessionAdded = () => {
     fetchSessions()
