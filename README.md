@@ -48,3 +48,8 @@ Open [http://localhost:3000](http://localhost:3000) to see the app.
 - `classes` - Classes created by instructors
 - `sessions` - Individual class sessions/dates
 - `attendance` - Attendance records (student + session + status)
+
+# Attendance App
+
+Live Demo: https://attendance-app-chi-khaki.vercel.app
+
